@@ -5,12 +5,9 @@ import Footer from "../footer/footer";
 import '../../css/app.css'
 
 class App extends Component{
+    defId=0;
     state={
-        todoData:[
-            {value:'lala',timeStamp:'12',id:1},
-            {value:'lalala',timeStamp:'12',id:2},
-            {value:'lalala',timeStamp:'12',id:3},
-        ]
+        todoData:[]
     }
 
     deleteItem=(id)=>{
@@ -24,12 +21,25 @@ class App extends Component{
             }
         })
     }
+    addItem=(value)=>{
+        const newItem={
+            value:value,
+            id:this.defId++,
+            checked:false,
+            date:new Date(),
+        }
+        this.setState(({todoData})=>{
+           return{
+            todoData:[...todoData,newItem]
+           } 
+        })
+    }
 
     
     render(){
     return (
         <div className="todoapp">
-            <NewTaskForm />
+            <NewTaskForm addItem={this.addItem.bind(this)} />
             <section className="main"> 
                 <TaskList todos={this.state.todoData} deleteItem={this.deleteItem}/>
             </section>
