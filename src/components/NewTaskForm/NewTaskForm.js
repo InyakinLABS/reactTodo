@@ -4,7 +4,7 @@ import './NewTaskForm.css'
 const NewTaskForm = ()=>{
     return (
         <header className="header">
-        <h1>ebat</h1>
+        <h1>TODOS</h1>
         <input className="new-todo" placeholder="What needs to be done?" autoFocus/>
       </header>
     )
