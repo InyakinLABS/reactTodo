@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 const filterContent=['All','Active','Completed']
-const filterButton=filterContent.map((item)=>{
+const filterButton=filterContent.map((item,index)=>{
     return (
-        <li>
-            <button>{item}</button>
+        <li key={index}>
+            <button >{item}</button>
         </li>
     )
 })

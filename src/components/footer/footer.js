@@ -1,5 +1,4 @@
 import React from "react";
-import './footer.css'
 import Filters from '../TasksFilter/TasksFilter'
 
 

@@ -1,16 +1,20 @@
-import React from "react";
-import "./TaskList.css"
+import React, { Component } from "react";
 import Task from "../Task/Task";
 
-const TaskList=()=>{ //Разобраться с TodoListItem
-    return (
-        <ul className="todo-list">
-            <Task/> 
-            <Task/> 
-            <Task/> 
-            
-        </ul>
-   )
+
+
+class TaskList extends Component{
+    render() {
+        const { todos,deleteItem } = this.props;
+        return (
+          <ul className="todo-list">
+            {todos.map((todo) => (
+              <Task key={todo.id} todo={todo} deleteItem={deleteItem} />
+            ))}
+          </ul>
+        );
+      }
 }
+
 
 export default TaskList
