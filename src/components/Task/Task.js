@@ -1,46 +1,61 @@
 import React,{Component} from "react";
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 
+
+
+
+
 export default class Task extends Component{
 constructor(){
   super()
   this.state={
-    done:false,
-    checked:false,
+    editing:false,
+    value:''  
   }
 }
-  
-  clickHandler=()=>{
-    this.setState(({done,checked})=>{
-      return {done: !done,
-        checked:!checked
-      }
-
-     
-    })
-  }
+handleSubmit(event) {
+  event.preventDefault();
+  const {
+    editItem,
+    todo: { id },
+  } = this.props;
+  editItem(id, this.state.value);
+  this.setState({ value: '' });
+  this.setState({ editing: false });
+}
+ 
   render(){
-    const done=this.state.done
-    const {todo,deleteItem}=this.props
-    const {value,id,date}=todo;
-    let classNames = ''
-    if(done){
-      classNames="completed"
-      
-    }
+    const {todo,deleteItem,clickHandler}=this.props
+    const {value,id,date,checked}=todo;
     const formattedDate=formatDistanceToNow(date,{includeSeconds:true})
     
     return (
-        <li className={classNames} onClick={this.clickHandler} key={id}>
-           <div className="view">
-              <input className="toggle" checked={this.state.checked} readOnly type="checkbox"/>
-              <label>
+        <li className={checked ? 'completed' : this.state.editing ? 'editing' : null} >
+           <div className="view" >
+              <input className="toggle" id={id} onChange={(event) => clickHandler(id, event.target.checked)}  checked={checked}  type="checkbox"/>
+              <label htmlFor={id}>
                 <span className="description">{value}</span>
                 <span className="created">created {formattedDate} ago </span>
               </label>
-              <button className="icon icon-edit"></button>
+              <button  type="button"
+            onClick={() => this.setState(({ editing }) => ({ editing: !editing, value: this.props.todo.value }))}
+            className="icon icon-edit" ></button> 
               <button className="icon icon-destroy" onClick={()=>deleteItem(id)}></button>
             </div>
+
+
+            {this.state.editing && (
+          <form onSubmit={this.handleSubmit.bind(this)}>
+            <input
+              onChange={(event) => this.setState({ value: event.target.value })}
+              type="text"
+              className="edit"
+              value={this.state.value}
+            />
+          </form>
+        )}
+
+
           </li>
       )
   }

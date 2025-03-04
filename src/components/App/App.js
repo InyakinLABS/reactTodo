@@ -7,9 +7,22 @@ import '../../css/app.css'
 class App extends Component{
     defId=0;
     state={
-        todoData:[]
+        todoData:[],
+        filter:"All",
     }
-
+    clickHandler=(id,status)=>{
+        
+        this.setState(({todoData})=>{
+          return{
+            todoData: todoData.map((item)=>{
+                if(item.id===id){
+                    item.checked=status;
+                }
+                return item
+            })
+          } 
+        })
+    }
     deleteItem=(id)=>{
         this.setState(({todoData})=>{
             const idx=todoData.findIndex((el)=>el.id===id)
@@ -34,6 +47,38 @@ class App extends Component{
            } 
         })
     }
+    filterItems = () => {
+        const { todoData, filter } = this.state;
+        return todoData.filter(({ checked }) => {
+            if (filter === 'All') {
+                return true; 
+            } else if (filter === 'Completed') {
+                return checked === true; 
+            } else {
+                return checked === false;
+            }
+        });
+    };
+    newFilter=(filter)=>{
+        this.setState({filter:filter})
+    }
+
+    clearCompleted=()=>{
+        this.setState(({todoData})=>{
+            return{
+                todoData:todoData.filter(item=>!item.checked)
+            }
+        });
+    }
+
+    editItem=(id, text)=> {
+        this.setState(({ todoData }) => ({
+          todoData: todoData.map((element) => {
+            if (element.id === id) element.value = text;
+            return element;
+          }),
+        }));
+      }
 
     
     render(){
@@ -41,9 +86,14 @@ class App extends Component{
         <div className="todoapp">
             <NewTaskForm addItem={this.addItem.bind(this)} />
             <section className="main"> 
-                <TaskList todos={this.state.todoData} deleteItem={this.deleteItem}/>
+                <TaskList todos={this.filterItems()} deleteItem={this.deleteItem}
+                editItem={this.editItem}
+                clickHandler={this.clickHandler}/>
             </section>
-            <Footer/>
+            <Footer 
+            itemsLeft={this.state.todoData.filter(item=>!item.checked).length}
+            newFilter={this.newFilter} 
+            clearCompleted={this.clearCompleted}/>
         </div> 
     )
     }

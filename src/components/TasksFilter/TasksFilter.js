@@ -1,18 +1,22 @@
 import React, { Component } from "react";
-const filterContent=['All','Active','Completed']
-const filterButton=filterContent.map((item,index)=>{
-    return (
-        <li key={index}>
-            <button >{item}</button>
-        </li>
-    )
-})
 
 export default class Filters extends Component{
+  
+   
     render(){
+       const {newFilter}=this.props;
+       
         return(
             <ul className="filters">
-                {filterButton}
+                <li key='1'>
+                     <button onClick={()=>newFilter('All')}>All</button>
+                 </li>
+                 <li key='2'>
+                     <button onClick={()=>newFilter('Active')}>Active</button>
+                 </li>
+                 <li key='3'>
+                     <button onClick={()=>newFilter('Completed')}>Completed</button>
+                 </li>
             </ul>
             )
     }
