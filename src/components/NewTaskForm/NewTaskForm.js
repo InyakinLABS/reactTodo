@@ -31,7 +31,7 @@ export default class NewTaskForm extends Component {
           autoFocus
           value={this.state.value}
           onChange={(event) => {
-            this.setState({ value: event.target.value.trim() })
+            this.setState({ value: event.target.value })
           }}
         />
       </form>
