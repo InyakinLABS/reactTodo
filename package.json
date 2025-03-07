@@ -7,7 +7,13 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^13.5.0",
+    "babel-eslint": "^10.1.0",
     "date-fns": "^4.1.0",
+    "eslint-config-react": "^1.1.7",
+    "eslint-config-react-hooks": "^1.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
+    "prop-types": "^15.8.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-scripts": "5.0.1",
@@ -17,7 +23,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "prepare": "husky"
   },
   "eslintConfig": {
     "extends": [
@@ -37,9 +47,38 @@
       "last 1 safari version"
     ]
   },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,css,md}": [
+      "prettier --write"
+    ]
+  },
   "main": "index.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-html": "^8.1.2",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "prettier": "^3.5.3"
+  },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "V1_1 Created a basic layout and components",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/InyakinLABS/reactTodo.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/InyakinLABS/reactTodo/issues"
+  },
+  "homepage": "https://github.com/InyakinLABS/reactTodo#readme"
 }
