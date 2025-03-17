@@ -47,8 +47,8 @@ export default class Task extends Component {
             type="checkbox"
           />
           <label htmlFor={id}>
-            <span className="description">{value}</span>
-            <span className="created">created {formattedDate} ago </span>
+            <span className="created">{value}</span>
+            <span className="description">created {formattedDate} ago </span>
           </label>
           <button
             type="button"
