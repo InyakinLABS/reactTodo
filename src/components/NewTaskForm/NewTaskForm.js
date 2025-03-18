@@ -19,12 +19,11 @@ export default class NewTaskForm extends Component {
     e.preventDefault()
     const { value, minutes, seconds } = this.state
 
-    // Преобразуем минуты и секунды в число
     const timeInSeconds = parseInt(minutes || 0) * 60 + parseInt(seconds || 0)
 
     if (value.trim()) {
-      this.props.addItem(value, timeInSeconds) // Передаем текст задачи и время
-      this.setState({ value: '', minutes: '', seconds: '' }) // Очищаем поля формы
+      this.props.addItem(value, timeInSeconds)
+      this.setState({ value: '', minutes: '', seconds: '' })
     }
   }
 
@@ -56,7 +55,7 @@ export default class NewTaskForm extends Component {
           value={this.state.seconds}
           onChange={(e) => this.setState({ seconds: e.target.value })}
         />
-        <button type="submit" style={{ display: 'none' }} /> {/* Скрытая кнопка для отправки формы */}
+        <button type="submit" style={{ display: 'none' }} />
       </form>
     )
   }
