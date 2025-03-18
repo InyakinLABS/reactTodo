@@ -1,6 +1,7 @@
 // TaskList.js (добавляем пропс updateTime)
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+
 import Task from '../Task/Task'
 
 class TaskList extends Component {
@@ -13,7 +14,7 @@ class TaskList extends Component {
   }
 
   render() {
-    const { todos, deleteItem, editItem, clickHandler, updateTimer,timers ,startTimer,stopTimer} = this.props
+    const { todos, deleteItem, editItem, clickHandler, updateTimer, timers, startTimer, stopTimer } = this.props
     return (
       <ul className="todo-list">
         {todos.map((todo) => (

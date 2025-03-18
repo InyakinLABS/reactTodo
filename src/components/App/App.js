@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+
 import NewTaskForm from '../NewTaskForm/NewTaskForm'
 import TaskList from '../TaskList/TaskList'
 import Footer from '../footer/footer'
@@ -19,24 +20,20 @@ class App extends Component {
 
   clickHandler = (id, status) => {
     this.setState(({ todoData }) => ({
-      todoData: todoData.map((item) =>
-        item.id === id ? { ...item, checked: status } : item
-      ),
+      todoData: todoData.map((item) => (item.id === id ? { ...item, checked: status } : item)),
     }))
   }
 
- 
   deleteItem = (id) => {
     this.setState(({ todoData }) => ({
       todoData: todoData.filter((item) => item.id !== id),
     }))
   }
 
-
   addItem = (text, time = 0) => {
     const newItem = {
       value: text,
-      id: this.state.todoData.length+1, 
+      id: this.state.todoData.length,
       checked: false,
       date: new Date(),
       timeLeft: time,
@@ -47,7 +44,6 @@ class App extends Component {
     this.startTimer(newItem.id)
   }
 
-  
   startTimer = (id) => {
     this.setState(({ timers }) => ({
       timers: {
@@ -57,7 +53,6 @@ class App extends Component {
     }))
   }
 
-  
   stopTimer = (id) => {
     this.setState(({ timers }) => {
       clearInterval(timers[id])
@@ -67,17 +62,13 @@ class App extends Component {
     })
   }
 
-
   updateTimer = (id) => {
     this.setState(({ todoData }) => ({
       todoData: todoData.map((item) =>
-        item.id === id && !item.checked
-          ? { ...item, timeLeft: Math.max(0, item.timeLeft - 1) }
-          : item
+        item.id === id && !item.checked ? { ...item, timeLeft: Math.max(0, item.timeLeft - 1) } : item
       ),
     }))
   }
-
 
   filterItems = () => {
     const { todoData, filter } = this.state
@@ -88,11 +79,9 @@ class App extends Component {
     })
   }
 
-
   newFilter = (filter) => {
     this.setState({ filter })
   }
-
 
   clearCompleted = () => {
     this.setState(({ todoData }) => ({
@@ -100,12 +89,9 @@ class App extends Component {
     }))
   }
 
-
   editItem = (id, text) => {
     this.setState(({ todoData }) => ({
-      todoData: todoData.map((item) =>
-        item.id === id ? { ...item, value: text } : item
-      ),
+      todoData: todoData.map((item) => (item.id === id ? { ...item, value: text } : item)),
     }))
   }
 
