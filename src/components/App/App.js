@@ -1,99 +1,134 @@
 import React, { Component } from 'react'
-
 import NewTaskForm from '../NewTaskForm/NewTaskForm'
 import TaskList from '../TaskList/TaskList'
 import Footer from '../footer/footer'
 import '../../css/app.css'
 
 class App extends Component {
-  defId = 0
   state = {
-    todoData: [],
+    todoData: JSON.parse(localStorage.getItem('todos')) || [],
     filter: 'All',
+    timers: {},
   }
+
+  componentDidUpdate(prevState) {
+    if (prevState.todoData !== this.state.todoData) {
+      localStorage.setItem('todos', JSON.stringify(this.state.todoData))
+    }
+  }
+
   clickHandler = (id, status) => {
-    this.setState(({ todoData }) => {
-      return {
-        todoData: todoData.map((item) => {
-          if (item.id === id) {
-            item.checked = status
-          }
-          return item
-        }),
-      }
-    })
+    this.setState(({ todoData }) => ({
+      todoData: todoData.map((item) =>
+        item.id === id ? { ...item, checked: status } : item
+      ),
+    }))
   }
+
+ 
   deleteItem = (id) => {
-    this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id)
-      todoData.splice(idx, 1)
-      const before = todoData.slice(0, idx)
-      const after = todoData.slice(idx)
-      return {
-        todoData: [...before, ...after],
-      }
-    })
+    this.setState(({ todoData }) => ({
+      todoData: todoData.filter((item) => item.id !== id),
+    }))
   }
-  addItem = (value) => {
+
+
+  addItem = (text, time = 0) => {
     const newItem = {
-      value: value,
-      id: this.defId++,
+      value: text,
+      id: this.state.todoData.length+1, 
       checked: false,
       date: new Date(),
+      timeLeft: time,
     }
-    this.setState(({ todoData }) => {
-      return {
-        todoData: [...todoData, newItem],
-      }
+    this.setState(({ todoData }) => ({
+      todoData: [...todoData, newItem],
+    }))
+    this.startTimer(newItem.id)
+  }
+
+  
+  startTimer = (id) => {
+    this.setState(({ timers }) => ({
+      timers: {
+        ...timers,
+        [id]: setInterval(() => this.updateTimer(id), 1000),
+      },
+    }))
+  }
+
+  
+  stopTimer = (id) => {
+    this.setState(({ timers }) => {
+      clearInterval(timers[id])
+      const updatedTimers = { ...timers }
+      delete updatedTimers[id]
+      return { timers: updatedTimers }
     })
   }
+
+
+  updateTimer = (id) => {
+    this.setState(({ todoData }) => ({
+      todoData: todoData.map((item) =>
+        item.id === id && !item.checked
+          ? { ...item, timeLeft: Math.max(0, item.timeLeft - 1) }
+          : item
+      ),
+    }))
+  }
+
+
   filterItems = () => {
     const { todoData, filter } = this.state
     return todoData.filter(({ checked }) => {
-      if (filter === 'All') {
-        return true
-      } else if (filter === 'Completed') {
-        return checked === true
-      } else {
-        return checked === false
-      }
+      if (filter === 'All') return true
+      if (filter === 'Completed') return checked
+      return !checked
     })
-  }
-  newFilter = (filter) => {
-    this.setState({ filter: filter })
   }
 
-  clearCompleted = () => {
-    this.setState(({ todoData }) => {
-      return {
-        todoData: todoData.filter((item) => !item.checked),
-      }
-    })
+
+  newFilter = (filter) => {
+    this.setState({ filter })
   }
+
+
+  clearCompleted = () => {
+    this.setState(({ todoData }) => ({
+      todoData: todoData.filter((item) => !item.checked),
+    }))
+  }
+
 
   editItem = (id, text) => {
     this.setState(({ todoData }) => ({
-      todoData: todoData.map((element) => {
-        if (element.id === id) element.value = text
-        return element
-      }),
+      todoData: todoData.map((item) =>
+        item.id === id ? { ...item, value: text } : item
+      ),
     }))
   }
 
   render() {
+    const { todoData, timers } = this.state
+    const filteredTodos = this.filterItems()
+
     return (
       <div className="todoapp">
-        <NewTaskForm addItem={this.addItem.bind(this)} />
+        <NewTaskForm addItem={this.addItem} />
         <section className="main">
           <TaskList
-            todos={this.filterItems()}
+            todos={filteredTodos}
             deleteItem={this.deleteItem}
             editItem={this.editItem}
             clickHandler={this.clickHandler}
+            timers={timers}
+            startTimer={this.startTimer}
+            stopTimer={this.stopTimer}
           />
         </section>
         <Footer
-          itemsLeft={this.state.todoData.filter((item) => !item.checked).length}
+          itemsLeft={todoData.filter((item) => !item.checked).length}
           newFilter={this.newFilter}
           clearCompleted={this.clearCompleted}
         />
