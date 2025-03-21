@@ -1,50 +1,45 @@
 import PropTypes from 'prop-types'
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 
-export default class NewTaskForm extends Component {
-  constructor() {
-    super()
-    this.state = {
-      value: '',
-      minutes: '',
-      seconds: '',
-    }
+const NewTaskForm = (props) => {
+  const [value, setValue] = useState('')
+  const [minutes, setMinutes] = useState('')
+  const [seconds, setSeconds] = useState('')
+
+  const isTimeValid = () => {
+    const total = parseInt(minutes || 0) * 60 + parseInt(seconds || 0)
+    return total > 0
   }
-
-  static propTypes = {
-    addItem: PropTypes.func.isRequired,
-  }
-
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
-    const { value, minutes, seconds } = this.state
-
     const timeInSeconds = parseInt(minutes || 0) * 60 + parseInt(seconds || 0)
 
     if (value.trim()) {
-      this.props.addItem(value, timeInSeconds)
-      this.setState({ value: '', minutes: '', seconds: '' })
+      props.addItem(value, timeInSeconds) // Передаем текст задачи и время
+      setValue('')
+      setMinutes('')
+      setSeconds('') // Очищаем поля формы
     }
   }
 
-  render() {
-    return (
-      <form className="header" onSubmit={this.handleSubmit}>
-        <h1>TODO</h1>
+  return (
+    <header className="header">
+      <h1>TODO</h1>
+      <form className="new-todo-form" onSubmit={handleSubmit}>
         <input
           className="new-todo"
           placeholder="What needs to be done?"
           autoFocus
-          value={this.state.value}
-          onChange={(e) => this.setState({ value: e.target.value })}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
         />
         <input
           className="new-todo-form__timer"
           placeholder="Min"
           type="number"
           min="0"
-          value={this.state.minutes}
-          onChange={(e) => this.setState({ minutes: e.target.value })}
+          value={minutes}
+          onChange={(e) => setMinutes(e.target.value)}
         />
         <input
           className="new-todo-form__timer"
@@ -52,11 +47,21 @@ export default class NewTaskForm extends Component {
           type="number"
           min="0"
           max="59"
-          value={this.state.seconds}
-          onChange={(e) => this.setState({ seconds: e.target.value })}
+          value={seconds}
+          onChange={(e) => setSeconds(e.target.value)}
         />
-        <button type="submit" style={{ display: 'none' }} />
+        <button
+          type="submit"
+          className={`submit-btn ${!isTimeValid() ? 'disabled' : ''}`}
+          disabled={!value.trim() || !isTimeValid()}
+          aria-label="Add task"
+        />
       </form>
-    )
-  }
+    </header>
+  )
+}
+export default NewTaskForm
+
+NewTaskForm.propTypes = {
+  addItem: PropTypes.func.isRequired,
 }
